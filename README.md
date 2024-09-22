@@ -1,17 +1,51 @@
 # iPickup Pro 使用說明
 
+
+## 啟動程式的步驟
+
 1.  根據你的作業系統和 CPU 架構，下載合適的 iPickup Pro 壓縮檔案 <https://github.com/ipickup-pro/releases/releases/latest>
-2.  首次執行，打開 command prompt app (Windows系統下，執行 > CMD)，並移動路徑至解壓後 folder 位置，然後輸入以下指令以開啟設定介面，瀏覽器會打開網址 <http://localhost:9999>
-    
-    ```shell
-    ipickup_pro-win-x64.exe --config
-    ```
-3.  設定完成後，於 command prompt app 輸入 bot 執行檔即可開始自動搶購的操作
-    
-    ```shell
-    ipickup_pro-win-x64.exe
-    ```
-4.  程式啟動後，可於瀏覽器打開 dashboard，網址為 <http://localhost:5555> (位址中的 port 可於設定介面中修改)
+2.  將壓縮檔解壓後，先執行 `run-config` 以開啟設定介面的 web UI，瀏覽器會自動打開設定介面的網址: <http://localhost:9999>
+3.  設定完成後，再執行 `run` 即可開始自動搶購的操作
+4.  程式啟動後，可於瀏覽器打開 dashboard，網址為 <http://localhost:3000> (位址中的 port 可於設定介面中修改)
+
+
+## 設定說明
+
+-   **General**
+    -   一般設定包含 `Bot 註冊碼` 和 `Dashboard Port`
+-   **Profiles** - 取貨人資料
+    -   `Profile ID` - 自定意的 ID 以作辨認
+-   **付款卡**
+    -   `付款卡 ID` - 自定意的 ID 以作辨認
+    -   `有效期至` - 付款卡到期日，格式 `MM/YY`
+-   **Proxy 列表**
+    -   `Proxy 列表 ID` - 自定意的 ID 以作辨認
+    -   `Proxy 列表` - 每一行一個 proxy 位址，並跟隨此格式 `[USERNAME:PASSWORD@IP:PORT]` 或 `[IP:PORT:USERNAME:PASSWORD]`
+-   **監察器**
+    -   `檢測間距` - 檢測間距毫秒(ms)
+    -   `型號` - 監察的型號，如沒提供，則會監察 `properties.yml` 內的所有型號
+-   **任務**
+    -   任務由 `任務組` 和 `子任務` 組成
+    -   每個 `任務組` 必需包含最少一個 `子任務`
+    -   `任務組` 的作用是提供預設值給 `子任務` 繼承，以方便快速修改設定
+    -   `子任務` 會繼承 `任務組` 的欄位值為預設值，並可逐一欄位進行覆寫
+    -   所有欄位均可選填，唯 `型號` 必須揀選一款
+        -   欄位空白時會使用程式預設值或隨機值
+-   **操作**
+-   **訂單通知**
+    -   `Discord` - 如需使用 Discord 通知，請參照[此連結](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)以設立 Discord webhook
+
+
+## 進階操作
+
+```sh
+$> ./ipickup_pro-linux-x64 --help
+  -y, --no-confirmation  No confirmation
+      --config           Config UI
+  -p, --port PORT        Port number
+      --unbind           Unbind license key
+  -h, --help             Help
+```
 
 
 # 常見問題 / FAQ
@@ -31,6 +65,11 @@ model-id: # 自定意的型號ID
   sku: SKU # Apple商品 part number / SKU
   name: NAME # 商品名稱
 ```
+
+
+### 下載新版本後，如何將設定保留?
+
+將新的執行檔(e.g. .exe)複制至舊資料夾中，或將舊的 `config_override.yml` 複制至新資料夾中即可。
 
 
 ### Console 顯示的中文字為亂碼
@@ -80,4 +119,4 @@ module.exports = {
 
 ### 問題回報及一般討論
 
-TG群組: [iPickup Pro Chat 2024](https://t.me/+7t9rErmqZJQ2ODI1)
+TG 群組: [iPickup Pro Chat 2024](https://t.me/+7t9rErmqZJQ2ODI1)
