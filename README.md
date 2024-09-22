@@ -5,8 +5,8 @@
 
 1.  根據你的作業系統和 CPU 架構，下載合適的 iPickup Pro 壓縮檔案 <https://github.com/ipickup-pro/releases/releases/latest>
 2.  將壓縮檔解壓後，先執行 `run-config` 以開啟設定介面的 web UI，瀏覽器會自動打開設定介面的網址: <http://localhost:9999>
-3.  設定完成後，再執行 `run` 即可開始進行自動搶購的操作
-4.  程式啟動後，可於瀏覽器打開 dashboard，網址為 <http://localhost:3000> (位址中的 port 可於設定介面中修改)
+3.  設定完成後，再執行 `run` 即可進入自動搶購的操作
+4.  程式啟動後，可於瀏覽器打開 dashboard，預設網址為 <http://localhost:3000> (位址中的 port 可於設定介面中修改)
 
 
 ## 設定說明
