@@ -102,6 +102,102 @@ module.exports = {
 執行輸入 `pm2 start` 即可。
 
 
+### 監察器停止運作
+
+如果監察器內顯示的時間在檢測間距過後一直沒有跳動，便是監察器停止了運作。
+
+-   **解決方法 1 - 手動**
+    
+    打開 **Dashboard** > 按一下 **重啟監察器**
+
+-   **解決方法 2 - 自動 (感謝 tg@singdad 提供)**
+    -   使用 Tampermonkey 瀏瀏器插件 (<https://www.tampermonkey.net/>)
+        
+        ```javascript
+        // ==UserScript==
+        // @name         iPickup Pro monitor auto-restart
+        // @namespace    http://tampermonkey.net/
+        // @version      0.1
+        // @description  Check if an element's content is unchanged for 1 minute, then click a button
+        // @author       You
+        // @match        http://localhost:5555/*
+        // @grant        none
+        // ==/UserScript==
+        
+        (function() {
+         'use strict';
+        
+         const checkTimeInterval = 60000;
+        
+         // Function to check the element and click the button if needed
+         function checkElementAndClickButton() {
+          const labelElement = document.querySelector('.ui.small.label');
+          const buttonElement = document.querySelector('#app > div > div:nth-child(2) > div > button');
+        
+          if (!labelElement || !buttonElement) {
+           console.error('Required elements not found');
+           return;
+          }
+        
+          let lastContent = labelElement.innerHTML;
+        
+          const checkMonitor = () => {
+           const currentContent = labelElement.innerHTML;
+           if (currentContent === lastContent) {
+            buttonElement.click();
+           } else {
+            lastContent = currentContent;
+           }
+          };
+        
+          const intervalCheckMonitor = () => setInterval(checkMonitor, checkTimeInterval);
+          setTimeout(intervalCheckMonitor, checkTimeInterval);
+         }
+        
+         setTimeout(checkElementAndClickButton, 1000);
+        })();
+        ```
+    
+    -   用以下 PowerShell script 代替 `run.bat` (Windows 適用)
+        
+        ```shell
+        # Define the path to the program and the log files
+        $programPath = "C:\Users\singdad\Downloads\ipickup\ipickup_pro-win-x64.exe"
+        $stdoutLogFilePath = "C:\Users\singdad\Downloads\ipickup\stdout.log"
+        $stderrLogFilePath = "C:\Users\singdad\Downloads\ipickup\stderr.log"
+        
+        # Start the program and redirect its output to the log files
+        $process = Start-Process -FilePath $programPath -RedirectStandardOutput $stdoutLogFilePath -RedirectStandardError $stderrLogFilePath -PassThru
+        
+        # Wait for the program to start and send an initial Enter key press
+        Start-Sleep -Seconds 2
+        Add-Type -AssemblyName System.Windows.Forms
+        [System.Windows.Forms.SendKeys]::SendWait("{ENTER}")
+        
+        # Function to check if the process has output
+        function HasOutput {
+         $stdoutOutput = Get-Content -Path $stdoutLogFilePath -Tail 1
+         $stderrOutput = Get-Content -Path $stderrLogFilePath -Tail 1
+         return -not ([string]::IsNullOrWhiteSpace($stdoutOutput) -and [string]::IsNullOrWhiteSpace($stderrOutput))
+        }
+        
+        # Monitor the output
+        $lastOutputTime = Get-Date
+        while (-not $process.HasExited) {
+         if (HasOutput) {
+          $lastOutputTime = Get-Date
+         } elseif ((Get-Date) - $lastOutputTime -gt (New-TimeSpan -Minutes 2)) {
+          [System.Windows.Forms.SendKeys]::SendWait("{ENTER}")
+          $lastOutputTime = Get-Date
+         }
+         Start-Sleep -Seconds 10
+        }
+        
+        # Clean up
+        $process.WaitForExit()
+        ```
+
+
 ### 常見的錯誤和處理方法
 
 -   **訂單只能送貨**
