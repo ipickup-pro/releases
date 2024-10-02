@@ -111,7 +111,7 @@ module.exports = {
     打開 **Dashboard** > 按一下 **重啟監察器**
 
 -   **解決方法 2 - 自動 (感謝 tg@singdad 提供)**
-    -   使用 Tampermonkey 瀏瀏器插件 (<https://www.tampermonkey.net/>)
+    -   使用 Tampermonkey 瀏覽器插件 (<https://www.tampermonkey.net/>)
         
         ```javascript
         // ==UserScript==
